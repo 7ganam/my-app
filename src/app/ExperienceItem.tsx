@@ -35,51 +35,72 @@ function ExperienceItem({
   });
 
   return (
-    <div className="sub-item bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 backdrop-blur-sm w-full">
-      <div className="mb-4">
-        <EditorContent
-          editor={titleEditor}
-          style={{
-            fontSize: "20px",
-            fontWeight: "700",
-            color: "#1a202c",
-            letterSpacing: "-0.025em",
-            lineHeight: "1.3",
-            outline: "none",
-            border: "none",
-            fontFamily: "Inter, system-ui, sans-serif",
-          }}
-        />
-      </div>
-      <div className="flex justify-between items-center">
-        <div className="flex-1">
+    <div className="sub-item bg-gradient-to-r from-slate-50 to-gray-50 rounded-lg p-4 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 w-full">
+      <div className="mb-3">
+        <div
+          className="editor-container"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
           <EditorContent
-            editor={dateEditor}
+            editor={titleEditor}
             style={{
-              fontSize: "15px",
-              color: "#718096",
-              fontStyle: "normal",
-              fontWeight: "500",
+              fontSize: "18px",
+              fontWeight: "700",
+              color: "#374151",
+              letterSpacing: "-0.025em",
+              lineHeight: "1.3",
               outline: "none",
               border: "none",
               fontFamily: "Inter, system-ui, sans-serif",
-              letterSpacing: "0.025em",
+              cursor: "text",
             }}
           />
         </div>
+      </div>
+      <div className="flex justify-between items-center">
+        <div className="flex-1">
+          <div
+            className="editor-container"
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <EditorContent
+              editor={dateEditor}
+              style={{
+                fontSize: "14px",
+                color: "#6b7280",
+                fontStyle: "normal",
+                fontWeight: "500",
+                outline: "none",
+                border: "none",
+                fontFamily: "Inter, system-ui, sans-serif",
+                letterSpacing: "0.025em",
+                cursor: "text",
+              }}
+            />
+          </div>
+        </div>
         <div className="flex-1 text-right">
-          <EditorContent
-            editor={companyEditor}
-            style={{
-              fontSize: "16px",
-              color: "#4a5568",
-              fontWeight: "600",
-              outline: "none",
-              border: "none",
-              fontFamily: "Inter, system-ui, sans-serif",
-              letterSpacing: "0.025em",
-            }}
-          />
+          <div
+            className="editor-container"
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <EditorContent
+              editor={companyEditor}
+              style={{
+                fontSize: "15px",
+                color: "#4b5563",
+                fontWeight: "600",
+                outline: "none",
+                border: "none",
+                fontFamily: "Inter, system-ui, sans-serif",
+                letterSpacing: "0.025em",
+                cursor: "text",
+              }}
+            />
+          </div>
         </div>
       </div>
       <style jsx>{`
@@ -87,6 +108,8 @@ function ExperienceItem({
           outline: none !important;
           border: none !important;
           background: transparent !important;
+          cursor: text !important;
+          min-height: 20px !important;
         }
         .sub-item :global(.ProseMirror:focus) {
           outline: none !important;
@@ -97,6 +120,15 @@ function ExperienceItem({
         .sub-item :global(.ProseMirror p) {
           margin: 0 !important;
           padding: 0 !important;
+        }
+        .editor-container {
+          cursor: text;
+        }
+        .editor-container:hover {
+          background-color: rgba(59, 130, 246, 0.05);
+          border-radius: 4px;
+          padding: 2px;
+          margin: -2px;
         }
       `}</style>
     </div>

@@ -26,43 +26,59 @@ function ProfileHeader({
   });
 
   return (
-    <div className="profile-header bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-8 shadow-lg border border-green-200 w-full">
+    <div className="profile-header bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 w-full">
       <div className="text-center mb-6">
-        <EditorContent
-          editor={nameEditor}
-          style={{
-            fontSize: "32px",
-            fontWeight: "800",
-            color: "#065f46",
-            letterSpacing: "-0.025em",
-            lineHeight: "1.2",
-            outline: "none",
-            border: "none",
-            fontFamily: "Inter, system-ui, sans-serif",
-            textAlign: "center",
-          }}
-        />
+        <div
+          className="editor-container"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <EditorContent
+            editor={nameEditor}
+            style={{
+              fontSize: "32px",
+              fontWeight: "800",
+              color: "#374151",
+              letterSpacing: "-0.025em",
+              lineHeight: "1.2",
+              outline: "none",
+              border: "none",
+              fontFamily: "Inter, system-ui, sans-serif",
+              textAlign: "center",
+              cursor: "text",
+            }}
+          />
+        </div>
       </div>
       <div className="max-w-4xl mx-auto">
-        <EditorContent
-          editor={introEditor}
-          style={{
-            fontSize: "18px",
-            color: "#047857",
-            fontWeight: "400",
-            outline: "none",
-            border: "none",
-            fontFamily: "Inter, system-ui, sans-serif",
-            lineHeight: "1.6",
-            textAlign: "center",
-          }}
-        />
+        <div
+          className="editor-container"
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <EditorContent
+            editor={introEditor}
+            style={{
+              fontSize: "18px",
+              color: "#4b5563",
+              fontWeight: "400",
+              outline: "none",
+              border: "none",
+              fontFamily: "Inter, system-ui, sans-serif",
+              lineHeight: "1.6",
+              textAlign: "center",
+              cursor: "text",
+            }}
+          />
+        </div>
       </div>
       <style jsx>{`
         .profile-header :global(.ProseMirror) {
           outline: none !important;
           border: none !important;
           background: transparent !important;
+          cursor: text !important;
+          min-height: 20px !important;
         }
         .profile-header :global(.ProseMirror:focus) {
           outline: none !important;
@@ -73,6 +89,15 @@ function ProfileHeader({
         .profile-header :global(.ProseMirror p) {
           margin: 0 !important;
           padding: 0 !important;
+        }
+        .editor-container {
+          cursor: text;
+        }
+        .editor-container:hover {
+          background-color: rgba(59, 130, 246, 0.05);
+          border-radius: 4px;
+          padding: 2px;
+          margin: -2px;
         }
       `}</style>
     </div>

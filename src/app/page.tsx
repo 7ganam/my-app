@@ -96,13 +96,13 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col container mx-auto">
       {/* <BlockNoteView editor={editor} /> */}
-      <div className="title bg-green-500 h-[140px] flex items-center justify-center p-4">
+      <div className="title bg-gradient-to-b from-indigo-50 to-purple-50 h-[140px] flex items-center justify-center p-4">
         <ProfileHeader
           name="John Doe"
           intro="Passionate software engineer with 5+ years of experience building scalable web applications and leading development teams."
         />
       </div>
-      <div className="flex bg-yellow-500 w-full flex-1 min-h-0">
+      <div className="flex bg-gradient-to-b from-indigo-50 to-purple-50 w-full flex-1 min-h-0">
         <div className="w-1/4">
           <LeftColumn />
         </div>

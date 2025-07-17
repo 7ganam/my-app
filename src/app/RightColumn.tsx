@@ -38,22 +38,33 @@ function NestedSortableList({
   onSortEnd: (oldIndex: number, newIndex: number) => void;
 }) {
   return (
-    <SortableList
-      onSortEnd={onSortEnd}
-      className="nested-list"
-      draggedItemClassName="dragged"
+    <div
+      onMouseDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
     >
-      {items.map((item, index) => (
-        <SortableItem key={index}>
-          <div className="nested-item rounded m-1 relative group/nested">
-            <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover/nested:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
-              ⋮⋮
+      <SortableList
+        onSortEnd={onSortEnd}
+        className="nested-list"
+        draggedItemClassName="dragged"
+      >
+        {items.map((item, index) => (
+          <SortableItem key={index}>
+            <div className="nested-item rounded m-1 relative group/nested">
+              <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover/nested:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-200 rounded p-1 shadow-sm text-xs">
+                ⋮⋮
+              </div>
+              <div
+                className="pl-4"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+              >
+                {item}
+              </div>
             </div>
-            <div>{item}</div>
-          </div>
-        </SortableItem>
-      ))}
-    </SortableList>
+          </SortableItem>
+        ))}
+      </SortableList>
+    </div>
   );
 }
 
@@ -132,12 +143,12 @@ export default function RightColumn() {
     {
       id: "1",
       content: "<p>Experience</p>",
-      bgColor: "bg-red-500",
+      bgColor: "",
       styles: {
         fontSize: "20px",
         fontFamily: "Inter, sans-serif",
-        color: "#2c3e50",
-        backgroundColor: "#f8f9fa",
+        color: "#374151",
+        backgroundColor: "transparent",
         fontWeight: "bold",
         textAlign: "left" as const,
       },
@@ -165,12 +176,12 @@ export default function RightColumn() {
     {
       id: "2",
       content: "<p>Education</p>",
-      bgColor: "bg-blue-500",
+      bgColor: "",
       styles: {
         fontSize: "20px",
         fontFamily: "Inter, sans-serif",
-        color: "#2c3e50",
-        backgroundColor: "#f8f9fa",
+        color: "#374151",
+        backgroundColor: "transparent",
         fontWeight: "bold",
         textAlign: "left" as const,
       },
@@ -224,32 +235,51 @@ export default function RightColumn() {
   };
 
   return (
-    <SortableList
-      onSortEnd={onSortEnd}
-      className="list"
-      draggedItemClassName="dragged"
-    >
-      {items.map((item) => (
-        <SortableItem key={item.id}>
-          <div className={`item ${item.bgColor} m-2 p-4 relative group/parent`}>
-            <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover/parent:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-white rounded p-1 shadow-sm">
-              ⋮⋮
-            </div>
-            <EditorComponent
-              content={item.content}
-              editorId={`editor${item.id}`}
-              editorStyles={item.styles}
-              nestedItems={item.nestedItems}
-              onNestedSortEnd={
-                item.nestedItems
-                  ? (oldIndex: number, newIndex: number) =>
+    <div className="p-4 bg-gradient-to-b from-indigo-50 to-purple-50 h-full">
+      <SortableList
+        onSortEnd={onSortEnd}
+        className="list space-y-6"
+        draggedItemClassName="dragged"
+      >
+        {items.map((item) => (
+          <SortableItem key={item.id}>
+            <div className="item m-2 p-4 relative group/parent">
+              <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover/parent:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-200 rounded p-1 shadow-sm">
+                ⋮⋮
+              </div>
+              <div
+                className="mb-4"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+              >
+                <h2 className="text-xl font-bold text-gray-800 mb-2">
+                  <EditorComponent
+                    content={item.content}
+                    editorId={`editor${item.id}`}
+                    editorStyles={item.styles}
+                  />
+                </h2>
+                <div className="w-12 h-1 bg-indigo-400 rounded"></div>
+              </div>
+
+              {item.nestedItems && onNestedSortEnd && (
+                <div
+                  className="mt-4 flex-shrink-0"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                >
+                  <NestedSortableList
+                    items={item.nestedItems}
+                    onSortEnd={(oldIndex: number, newIndex: number) =>
                       onNestedSortEnd(item.id, oldIndex, newIndex)
-                  : undefined
-              }
-            />
-          </div>
-        </SortableItem>
-      ))}
-    </SortableList>
+                    }
+                  />
+                </div>
+              )}
+            </div>
+          </SortableItem>
+        ))}
+      </SortableList>
+    </div>
   );
 }
