@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import Tiptap from "./Tiptap";
+
 import {
   DndContext,
   closestCenter,
@@ -16,6 +18,9 @@ import {
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
 interface SortableItemProps {
   id: string;
   children: React.ReactNode;
@@ -31,20 +36,45 @@ function SortableItem({ id, children }: SortableItemProps) {
   };
 
   return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="item"
-    >
+    <li ref={setNodeRef} style={style} {...attributes} className="item">
+      <div
+        className="drag-handle bg-gray-300 h-8 cursor-move mb-2"
+        {...listeners}
+      >
+        ⋮⋮ Drag Handle
+      </div>
       {children}
     </li>
   );
 }
 
+// Individual editor component to isolate each editor instance
+function EditorComponent({
+  content,
+  editorId,
+}: {
+  content: string;
+  editorId: string;
+}) {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: content,
+    immediatelyRender: false,
+  });
+
+  return (
+    <div
+      className="editor-wrapper h-full"
+      onMouseDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
+    >
+      <EditorContent editor={editor} />
+    </div>
+  );
+}
+
 export default function RightColumn() {
-  const [items, setItems] = useState(["Item 1", "Item 2", "Item 3", "Item 4"]);
+  const [items, setItems] = useState(["1", "2", "3"]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -67,20 +97,41 @@ export default function RightColumn() {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        <ul className="list flex-3">
-          {items.map((item) => (
-            <SortableItem key={item} id={item}>
-              <div className="item bg-red-500 m-2 h-[200px]">{item}</div>
+    <div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          <ul className="list flex-3">
+            <SortableItem key={1} id={"1"}>
+              <div className="item bg-red-500 m-2 h-[200px] p-4">
+                <EditorComponent
+                  content="<p>Editor 1 Content</p>"
+                  editorId="editor1"
+                />
+              </div>
             </SortableItem>
-          ))}
-        </ul>
-      </SortableContext>
-    </DndContext>
+            <SortableItem key={2} id={"2"}>
+              <div className="item bg-blue-500 m-2 h-[200px] p-4">
+                <EditorComponent
+                  content="<p>Editor 2 Content</p>"
+                  editorId="editor2"
+                />
+              </div>
+            </SortableItem>
+            <SortableItem key={3} id={"3"}>
+              <div className="item bg-green-500 m-2 h-[200px] p-4">
+                <EditorComponent
+                  content="<p>Editor 3 Content</p>"
+                  editorId="editor3"
+                />
+              </div>
+            </SortableItem>
+          </ul>
+        </SortableContext>
+      </DndContext>
+    </div>
   );
 }
