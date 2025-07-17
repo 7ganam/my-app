@@ -4,7 +4,7 @@ import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import SubItem from "./SubItem";
+import ExperienceItem from "./ExperienceItem";
 
 interface EditorStyles {
   fontSize?: string;
@@ -43,11 +43,11 @@ function NestedSortableList({
     >
       {items.map((item, index) => (
         <SortableItem key={index}>
-          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm relative group/nested">
+          <div className="nested-item rounded m-1 relative group/nested">
             <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover/nested:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
               ⋮⋮
             </div>
-            <div className="pl-4">{item}</div>
+            <div>{item}</div>
           </div>
         </SortableItem>
       ))}
@@ -140,9 +140,24 @@ export default function RightColumn() {
         textAlign: "left" as const,
       },
       nestedItems: [
-        <SubItem key="1" />,
-        <SubItem key="2" />,
-        <SubItem key="3" />,
+        <ExperienceItem
+          key="1"
+          title="Senior Software Engineer"
+          date="2020 - 2023"
+          company="Google"
+        />,
+        <ExperienceItem
+          key="2"
+          title="Full Stack Developer"
+          date="2018 - 2020"
+          company="Microsoft"
+        />,
+        <ExperienceItem
+          key="3"
+          title="Frontend Developer"
+          date="2016 - 2018"
+          company="Apple"
+        />,
       ],
     },
     {
