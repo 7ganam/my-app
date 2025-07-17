@@ -36,12 +36,17 @@ function SortableItem({ id, children }: SortableItemProps) {
   };
 
   return (
-    <li ref={setNodeRef} style={style} {...attributes} className="item">
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className="item relative group"
+    >
       <div
-        className="drag-handle bg-gray-300 h-8 cursor-move mb-2"
+        className="drag-handle absolute top-2 -left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-white rounded p-1 shadow-sm"
         {...listeners}
       >
-        ⋮⋮ Drag Handle
+        ⋮⋮
       </div>
       {children}
     </li>
