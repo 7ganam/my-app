@@ -23,6 +23,32 @@ interface EditorItem {
   content: string;
   bgColor: string;
   styles: EditorStyles;
+  nestedItems?: string[];
+}
+
+// Nested sortable list component
+function NestedSortableList({
+  items,
+  onSortEnd,
+}: {
+  items: string[];
+  onSortEnd: (oldIndex: number, newIndex: number) => void;
+}) {
+  return (
+    <SortableList
+      onSortEnd={onSortEnd}
+      className="nested-list"
+      draggedItemClassName="dragged"
+    >
+      {items.map((item) => (
+        <SortableItem key={item}>
+          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm cursor-move">
+            {item}
+          </div>
+        </SortableItem>
+      ))}
+    </SortableList>
+  );
 }
 
 // Individual editor component to isolate each editor instance
@@ -30,10 +56,14 @@ function EditorComponent({
   content,
   editorId,
   editorStyles,
+  nestedItems,
+  onNestedSortEnd,
 }: {
   content: string;
   editorId: string;
   editorStyles?: EditorStyles;
+  nestedItems?: string[];
+  onNestedSortEnd?: (oldIndex: number, newIndex: number) => void;
 }) {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -71,6 +101,11 @@ function EditorComponent({
           }}
         />
       </div>
+      {nestedItems && onNestedSortEnd && (
+        <div className="mt-4">
+          <NestedSortableList items={nestedItems} onSortEnd={onNestedSortEnd} />
+        </div>
+      )}
       <style jsx>{`
         .editor-wrapper :global(.ProseMirror) {
           outline: none !important;
@@ -100,6 +135,7 @@ export default function RightColumn() {
         fontWeight: "bold",
         textAlign: "center" as const,
       },
+      nestedItems: ["1", "2", "3"],
     },
     {
       id: "2",
@@ -135,6 +171,28 @@ export default function RightColumn() {
     setItems((array) => arrayMoveImmutable(array, oldIndex, newIndex));
   };
 
+  const onNestedSortEnd = (
+    itemId: string,
+    oldIndex: number,
+    newIndex: number
+  ) => {
+    setItems((array) => {
+      return array.map((item) => {
+        if (item.id === itemId && item.nestedItems) {
+          return {
+            ...item,
+            nestedItems: arrayMoveImmutable(
+              item.nestedItems,
+              oldIndex,
+              newIndex
+            ),
+          };
+        }
+        return item;
+      });
+    });
+  };
+
   return (
     <SortableList
       onSortEnd={onSortEnd}
@@ -153,6 +211,13 @@ export default function RightColumn() {
               content={item.content}
               editorId={`editor${item.id}`}
               editorStyles={item.styles}
+              nestedItems={item.nestedItems}
+              onNestedSortEnd={
+                item.nestedItems
+                  ? (oldIndex, newIndex) =>
+                      onNestedSortEnd(item.id, oldIndex, newIndex)
+                  : undefined
+              }
             />
           </div>
         </SortableItem>
