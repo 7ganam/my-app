@@ -4,6 +4,7 @@ import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import SubItem from "./SubItem";
 
 interface EditorStyles {
   fontSize?: string;
@@ -23,7 +24,7 @@ interface EditorItem {
   content: string;
   bgColor: string;
   styles: EditorStyles;
-  nestedItems?: string[];
+  nestedItems?: React.ReactNode[];
 }
 
 // Nested sortable list component
@@ -31,7 +32,7 @@ function NestedSortableList({
   items,
   onSortEnd,
 }: {
-  items: string[];
+  items: React.ReactNode[];
   onSortEnd: (oldIndex: number, newIndex: number) => void;
 }) {
   return (
@@ -40,8 +41,8 @@ function NestedSortableList({
       className="nested-list"
       draggedItemClassName="dragged"
     >
-      {items.map((item) => (
-        <SortableItem key={item}>
+      {items.map((item, index) => (
+        <SortableItem key={index}>
           <div className="nested-item bg-white rounded p-2 m-1 shadow-sm relative group/nested">
             <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover/nested:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
               ⋮⋮
@@ -65,7 +66,7 @@ function EditorComponent({
   content: string;
   editorId: string;
   editorStyles?: EditorStyles;
-  nestedItems?: string[];
+  nestedItems?: React.ReactNode[];
   onNestedSortEnd?: (oldIndex: number, newIndex: number) => void;
 }) {
   const editor = useEditor({
@@ -128,17 +129,21 @@ export default function RightColumn() {
   const [items, setItems] = useState<EditorItem[]>([
     {
       id: "1",
-      content: "<p>Editor 1 Content</p>",
+      content: "<p>Experience</p>",
       bgColor: "bg-red-500",
       styles: {
-        fontSize: "16px",
-        fontFamily: "Georgia, serif",
+        fontSize: "20px",
+        fontFamily: "Inter, sans-serif",
         color: "#2c3e50",
         backgroundColor: "#f8f9fa",
         fontWeight: "bold",
-        textAlign: "center" as const,
+        textAlign: "left" as const,
       },
-      nestedItems: ["1", "2", "3"],
+      nestedItems: [
+        <SubItem key="1" />,
+        <SubItem key="2" />,
+        <SubItem key="3" />,
+      ],
     },
     {
       id: "2",
@@ -215,7 +220,7 @@ export default function RightColumn() {
               nestedItems={item.nestedItems}
               onNestedSortEnd={
                 item.nestedItems
-                  ? (oldIndex, newIndex) =>
+                  ? (oldIndex: number, newIndex: number) =>
                       onNestedSortEnd(item.id, oldIndex, newIndex)
                   : undefined
               }
