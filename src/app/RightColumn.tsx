@@ -91,11 +91,11 @@ function EditorComponent({
 
   return (
     <div
-      className="editor-wrapper h-full"
+      className="editor-wrapper h-full flex flex-col"
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
     >
-      <div style={mergedStyles}>
+      <div style={mergedStyles} className="flex-1 min-h-0">
         <EditorContent
           editor={editor}
           style={{
@@ -105,7 +105,7 @@ function EditorComponent({
         />
       </div>
       {nestedItems && onNestedSortEnd && (
-        <div className="mt-4">
+        <div className="mt-4 flex-shrink-0">
           <NestedSortableList items={nestedItems} onSortEnd={onNestedSortEnd} />
         </div>
       )}
@@ -205,7 +205,7 @@ export default function RightColumn() {
       {items.map((item) => (
         <SortableItem key={item.id}>
           <div
-            className={`item ${item.bgColor} m-2 h-[200px] p-4 relative group`}
+            className={`item ${item.bgColor} m-2 p-4 relative group min-h-[200px]`}
           >
             <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-white rounded p-1 shadow-sm">
               ⋮⋮
