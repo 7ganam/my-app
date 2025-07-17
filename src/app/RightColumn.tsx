@@ -247,21 +247,23 @@ export default function RightColumn() {
               <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover/parent:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-200 rounded p-1 shadow-sm">
                 ⋮⋮
               </div>
-              <div
-                className="mb-4"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <h2 className="text-xl font-bold text-gray-800 mb-2">
+              <div className="mb-6">
+                <div className="mb-2">
                   <EditorComponent
                     content={item.content}
                     editorId={`editor${item.id}`}
-                    editorStyles={item.styles}
+                    editorStyles={{
+                      ...item.styles,
+                      fontSize: "24px",
+                      fontWeight: "700",
+                      color: "#1f2937",
+                      border: "none",
+                      backgroundColor: "transparent",
+                    }}
                   />
-                </h2>
-                <div className="w-12 h-1 bg-indigo-400 rounded"></div>
+                </div>
+                <div className="h-px bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-full"></div>
               </div>
-
               {item.nestedItems && onNestedSortEnd && (
                 <div
                   className="mt-4 flex-shrink-0"
