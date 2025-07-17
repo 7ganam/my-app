@@ -94,7 +94,7 @@ export default function Home() {
   const editor = useCreateBlockNote();
 
   return (
-    <div className="min-h-screen flex container mx-auto bg-gradient-to-b from-indigo-50 to-purple-50">
+    <div className="w-[794px] h-[1123px] bg-white shadow-2xl rounded-xl mx-auto my-8 overflow-hidden flex">
       {/* <BlockNoteView editor={editor} /> */}
       <div className="w-1/4">
         <LeftColumn />
