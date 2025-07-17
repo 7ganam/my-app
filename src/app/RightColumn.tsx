@@ -48,13 +48,28 @@ function SortableItem({ id, children }: SortableItemProps) {
   );
 }
 
+interface EditorStyles {
+  fontSize?: string;
+  fontFamily?: string;
+  color?: string;
+  backgroundColor?: string;
+  padding?: string;
+  borderRadius?: string;
+  border?: string;
+  lineHeight?: string;
+  fontWeight?: string;
+  textAlign?: "left" | "center" | "right" | "justify";
+}
+
 // Individual editor component to isolate each editor instance
 function EditorComponent({
   content,
   editorId,
+  editorStyles,
 }: {
   content: string;
   editorId: string;
+  editorStyles?: EditorStyles;
 }) {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -62,13 +77,47 @@ function EditorComponent({
     immediatelyRender: false,
   });
 
+  const defaultStyles: EditorStyles = {
+    fontSize: "14px",
+    fontFamily: "Inter, sans-serif",
+    color: "#000",
+    backgroundColor: "white",
+    padding: "8px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    lineHeight: "1.5",
+    fontWeight: "normal",
+    textAlign: "left",
+  };
+
+  const mergedStyles = { ...defaultStyles, ...editorStyles };
+
   return (
     <div
       className="editor-wrapper h-full"
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
     >
-      <EditorContent editor={editor} />
+      <div style={mergedStyles}>
+        <EditorContent
+          editor={editor}
+          style={{
+            outline: "none",
+            border: "none",
+          }}
+        />
+      </div>
+      <style jsx>{`
+        .editor-wrapper :global(.ProseMirror) {
+          outline: none !important;
+          border: none !important;
+        }
+        .editor-wrapper :global(.ProseMirror:focus) {
+          outline: none !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+      `}</style>
     </div>
   );
 }
@@ -110,6 +159,14 @@ export default function RightColumn() {
                 <EditorComponent
                   content="<p>Editor 1 Content</p>"
                   editorId="editor1"
+                  editorStyles={{
+                    fontSize: "16px",
+                    fontFamily: "Georgia, serif",
+                    color: "#2c3e50",
+                    backgroundColor: "#f8f9fa",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
                 />
               </div>
             </SortableItem>
@@ -118,6 +175,14 @@ export default function RightColumn() {
                 <EditorComponent
                   content="<p>Editor 2 Content</p>"
                   editorId="editor2"
+                  editorStyles={{
+                    fontSize: "18px",
+                    fontFamily: "Monaco, monospace",
+                    color: "#e74c3c",
+                    backgroundColor: "#ecf0f1",
+                    lineHeight: "1.8",
+                    textAlign: "left",
+                  }}
                 />
               </div>
             </SortableItem>
@@ -126,6 +191,16 @@ export default function RightColumn() {
                 <EditorComponent
                   content="<p>Editor 3 Content</p>"
                   editorId="editor3"
+                  editorStyles={{
+                    fontSize: "20px",
+                    fontFamily: "Arial, sans-serif",
+                    color: "#27ae60",
+                    backgroundColor: "#fff",
+                    fontWeight: "300",
+                    textAlign: "right",
+                    border: "2px solid #27ae60",
+                    borderRadius: "8px",
+                  }}
                 />
               </div>
             </SortableItem>
