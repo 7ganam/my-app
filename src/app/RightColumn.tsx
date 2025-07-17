@@ -42,8 +42,11 @@ function NestedSortableList({
     >
       {items.map((item) => (
         <SortableItem key={item}>
-          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm cursor-move">
-            {item}
+          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm relative group">
+            <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
+              ⋮⋮
+            </div>
+            <div className="pl-4">{item}</div>
           </div>
         </SortableItem>
       ))}
