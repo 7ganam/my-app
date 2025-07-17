@@ -30,7 +30,7 @@ function getInitialData(): TBoard {
 export default function Page() {
   return (
     <div className="flex h-full flex-row justify-center">
-      <Board initial={getInitialData()} />
+      <Board initial={getInitialData().columns[0]} />
     </div>
   );
 }
