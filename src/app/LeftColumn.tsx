@@ -115,12 +115,20 @@ export default function LeftColumn() {
   }
 
   return (
-    <div className="p-4 bg-gradient-to-b from-indigo-50 to-purple-50 h-full">
+    <div className="p-4 bg-gradient-to-br from-slate-200 via-blue-100 to-indigo-200 h-full border-r border-gray-300 shadow-lg">
+      <div className="text-center mb-6">
+        <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+          <span className="text-white text-2xl font-bold">JD</span>
+        </div>
+        <h3 className="text-lg font-semibold text-gray-800 mb-1">John Doe</h3>
+        <p className="text-sm text-gray-600">Software Engineer</p>
+      </div>
+
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-800 mb-2">
           Contact Information
         </h2>
-        <div className="w-12 h-1 bg-indigo-400 rounded"></div>
+        <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></div>
       </div>
 
       <DndContext
