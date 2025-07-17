@@ -22,6 +22,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import LeftColumn from "./LeftColumn";
 import RightColumn from "./RightColumn";
+import ProfileHeader from "./ProfileHeader";
 interface SortableItemProps {
   id: string;
   children: React.ReactNode;
@@ -95,7 +96,12 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col container mx-auto">
       {/* <BlockNoteView editor={editor} /> */}
-      <div className="title bg-green-500  h-[140px]">title</div>
+      <div className="title bg-green-500 h-[140px] flex items-center justify-center p-4">
+        <ProfileHeader
+          name="John Doe"
+          intro="Passionate software engineer with 5+ years of experience building scalable web applications and leading development teams."
+        />
+      </div>
       <div className="flex bg-yellow-500 w-full flex-1 min-h-0">
         <div className="w-1/4">
           <LeftColumn />

@@ -6,6 +6,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import ExperienceItem from "./ExperienceItem";
 import EducationItem from "./EducationItem";
+import ProfileHeader from "./ProfileHeader";
 
 interface EditorStyles {
   fontSize?: string;
@@ -193,21 +194,6 @@ export default function RightColumn() {
           school="Lincoln High School"
         />,
       ],
-    },
-    {
-      id: "3",
-      content: "<p>Editor 3 Content</p>",
-      bgColor: "bg-green-500",
-      styles: {
-        fontSize: "20px",
-        fontFamily: "Arial, sans-serif",
-        color: "#27ae60",
-        backgroundColor: "#fff",
-        fontWeight: "300",
-        textAlign: "right" as const,
-        border: "2px solid #27ae60",
-        borderRadius: "8px",
-      },
     },
   ]);
 
