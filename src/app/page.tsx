@@ -93,10 +93,9 @@ export default function Home() {
   const editor = useCreateBlockNote();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <h1>Sortable List</h1>
+    <div className="min-h-screen flex flex-col container mx-auto">
       {/* <BlockNoteView editor={editor} /> */}
-      <div className="title bg-green-500 m-2 h-[140px]">title</div>
+      <div className="title bg-green-500  h-[140px]">title</div>
       <div className="flex bg-yellow-500 w-full flex-1 min-h-0">
         <div className="w-1/4">
           <LeftColumn />
