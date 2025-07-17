@@ -5,6 +5,7 @@ import { arrayMoveImmutable } from "array-move";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import ExperienceItem from "./ExperienceItem";
+import EducationItem from "./EducationItem";
 
 interface EditorStyles {
   fontSize?: string;
@@ -162,16 +163,36 @@ export default function RightColumn() {
     },
     {
       id: "2",
-      content: "<p>Editor 2 Content</p>",
+      content: "<p>Education</p>",
       bgColor: "bg-blue-500",
       styles: {
-        fontSize: "18px",
-        fontFamily: "Monaco, monospace",
-        color: "#e74c3c",
-        backgroundColor: "#ecf0f1",
-        lineHeight: "1.8",
+        fontSize: "20px",
+        fontFamily: "Inter, sans-serif",
+        color: "#2c3e50",
+        backgroundColor: "#f8f9fa",
+        fontWeight: "bold",
         textAlign: "left" as const,
       },
+      nestedItems: [
+        <EducationItem
+          key="1"
+          degree="Master of Computer Science"
+          year="2014 - 2016"
+          school="Stanford University"
+        />,
+        <EducationItem
+          key="2"
+          degree="Bachelor of Computer Science"
+          year="2010 - 2014"
+          school="UC Berkeley"
+        />,
+        <EducationItem
+          key="3"
+          degree="High School Diploma"
+          year="2006 - 2010"
+          school="Lincoln High School"
+        />,
+      ],
     },
     {
       id: "3",
