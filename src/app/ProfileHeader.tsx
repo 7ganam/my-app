@@ -26,7 +26,7 @@ function ProfileHeader({
   });
 
   return (
-    <div className="profile-header bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 w-full">
+    <div className="profile-header p-8 w-full">
       <div className="text-center mb-6">
         <div
           className="editor-container"
