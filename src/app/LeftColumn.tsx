@@ -14,14 +14,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/mantine";
-import "@blocknote/mantine/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import LeftColumn from "./LeftColumn";
-import RightColumn from "./RightColumn";
 interface SortableItemProps {
   id: string;
   children: React.ReactNode;
@@ -49,14 +43,8 @@ function SortableItem({ id, children }: SortableItemProps) {
   );
 }
 
-export default function Home() {
+export default function LeftColumn() {
   const [items, setItems] = useState(["Item 1", "Item 2", "Item 3", "Item 4"]);
-  const [items2, setItems2] = useState([
-    "Item 11",
-    "Item 22",
-    "Item 33",
-    "Item 44",
-  ]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -78,33 +66,21 @@ export default function Home() {
     }
   }
 
-  function handleDragEnd2(event: any) {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setItems2((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
-  const editor = useCreateBlockNote();
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <h1>Sortable List</h1>
-      {/* <BlockNoteView editor={editor} /> */}
-      <div className="title bg-green-500 m-2 h-[140px]">title</div>
-      <div className="flex bg-yellow-500 w-full flex-1 min-h-0">
-        <div className="w-1/4">
-          <LeftColumn />
-        </div>
-        <div className="flex-1 flex flex-col min-h-0">
-          <RightColumn />
-        </div>
-      </div>
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        <ul className="list flex-1">
+          {items.map((item) => (
+            <SortableItem key={item} id={item}>
+              <div className="item bg-red-500 m-2">{item}</div>
+            </SortableItem>
+          ))}
+        </ul>
+      </SortableContext>
+    </DndContext>
   );
 }
