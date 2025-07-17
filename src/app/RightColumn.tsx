@@ -42,8 +42,8 @@ function NestedSortableList({
     >
       {items.map((item) => (
         <SortableItem key={item}>
-          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm relative group">
-            <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
+          <div className="nested-item bg-white rounded p-2 m-1 shadow-sm relative group/nested">
+            <div className="drag-handle absolute top-1 -left-1 opacity-0 group-hover/nested:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-gray-100 rounded p-1 shadow-sm text-xs">
               ⋮⋮
             </div>
             <div className="pl-4">{item}</div>
@@ -204,10 +204,8 @@ export default function RightColumn() {
     >
       {items.map((item) => (
         <SortableItem key={item.id}>
-          <div
-            className={`item ${item.bgColor} m-2 p-4 relative group min-h-[200px]`}
-          >
-            <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-white rounded p-1 shadow-sm">
+          <div className={`item ${item.bgColor} m-2 p-4 relative group/parent`}>
+            <div className="drag-handle absolute top-2 -left-2 opacity-0 group-hover/parent:opacity-100 transition-opacity duration-200 cursor-move z-10 bg-white rounded p-1 shadow-sm">
               ⋮⋮
             </div>
             <EditorComponent
