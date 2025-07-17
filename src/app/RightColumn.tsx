@@ -123,7 +123,49 @@ function EditorComponent({
 }
 
 export default function RightColumn() {
-  const [items, setItems] = useState(["1", "2", "3"]);
+  const [items, setItems] = useState([
+    {
+      id: "1",
+      content: "<p>Editor 1 Content</p>",
+      bgColor: "bg-red-500",
+      styles: {
+        fontSize: "16px",
+        fontFamily: "Georgia, serif",
+        color: "#2c3e50",
+        backgroundColor: "#f8f9fa",
+        fontWeight: "bold",
+        textAlign: "center" as const,
+      },
+    },
+    {
+      id: "2",
+      content: "<p>Editor 2 Content</p>",
+      bgColor: "bg-blue-500",
+      styles: {
+        fontSize: "18px",
+        fontFamily: "Monaco, monospace",
+        color: "#e74c3c",
+        backgroundColor: "#ecf0f1",
+        lineHeight: "1.8",
+        textAlign: "left" as const,
+      },
+    },
+    {
+      id: "3",
+      content: "<p>Editor 3 Content</p>",
+      bgColor: "bg-green-500",
+      styles: {
+        fontSize: "20px",
+        fontFamily: "Arial, sans-serif",
+        color: "#27ae60",
+        backgroundColor: "#fff",
+        fontWeight: "300",
+        textAlign: "right" as const,
+        border: "2px solid #27ae60",
+        borderRadius: "8px",
+      },
+    },
+  ]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -137,8 +179,8 @@ export default function RightColumn() {
 
     if (active.id !== over.id) {
       setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
 
         return arrayMove(items, oldIndex, newIndex);
       });
@@ -152,58 +194,22 @@ export default function RightColumn() {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={items.map((item) => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
           <ul className="list flex-3">
-            <SortableItem key={1} id={"1"}>
-              <div className="item bg-red-500 m-2 h-[200px] p-4">
-                <EditorComponent
-                  content="<p>Editor 1 Content</p>"
-                  editorId="editor1"
-                  editorStyles={{
-                    fontSize: "16px",
-                    fontFamily: "Georgia, serif",
-                    color: "#2c3e50",
-                    backgroundColor: "#f8f9fa",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                />
-              </div>
-            </SortableItem>
-            <SortableItem key={2} id={"2"}>
-              <div className="item bg-blue-500 m-2 h-[200px] p-4">
-                <EditorComponent
-                  content="<p>Editor 2 Content</p>"
-                  editorId="editor2"
-                  editorStyles={{
-                    fontSize: "18px",
-                    fontFamily: "Monaco, monospace",
-                    color: "#e74c3c",
-                    backgroundColor: "#ecf0f1",
-                    lineHeight: "1.8",
-                    textAlign: "left",
-                  }}
-                />
-              </div>
-            </SortableItem>
-            <SortableItem key={3} id={"3"}>
-              <div className="item bg-green-500 m-2 h-[200px] p-4">
-                <EditorComponent
-                  content="<p>Editor 3 Content</p>"
-                  editorId="editor3"
-                  editorStyles={{
-                    fontSize: "20px",
-                    fontFamily: "Arial, sans-serif",
-                    color: "#27ae60",
-                    backgroundColor: "#fff",
-                    fontWeight: "300",
-                    textAlign: "right",
-                    border: "2px solid #27ae60",
-                    borderRadius: "8px",
-                  }}
-                />
-              </div>
-            </SortableItem>
+            {items.map((item) => (
+              <SortableItem key={item.id} id={item.id}>
+                <div className={`item ${item.bgColor} m-2 h-[200px] p-4`}>
+                  <EditorComponent
+                    content={item.content}
+                    editorId={`editor${item.id}`}
+                    editorStyles={item.styles}
+                  />
+                </div>
+              </SortableItem>
+            ))}
           </ul>
         </SortableContext>
       </DndContext>
