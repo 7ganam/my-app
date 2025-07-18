@@ -1,6 +1,8 @@
+import { ReactNode } from "react";
+
 export type TCard = {
   id: string;
-  description: string;
+  content: ReactNode;
 };
 
 export type TColumn = {
@@ -13,7 +15,7 @@ export type TBoard = {
   columns: TColumn[];
 };
 
-const cardKey = Symbol('card');
+const cardKey = Symbol("card");
 export type TCardData = {
   [cardKey]: true;
   card: TCard;
@@ -34,7 +36,9 @@ export function getCardData({
   };
 }
 
-export function isCardData(value: Record<string | symbol, unknown>): value is TCardData {
+export function isCardData(
+  value: Record<string | symbol, unknown>
+): value is TCardData {
   return Boolean(value[cardKey]);
 }
 
@@ -46,7 +50,7 @@ export function isDraggingACard({
   return isCardData(source.data);
 }
 
-const cardDropTargetKey = Symbol('card-drop-target');
+const cardDropTargetKey = Symbol("card-drop-target");
 export type TCardDropTargetData = {
   [cardDropTargetKey]: true;
   card: TCard;
@@ -54,7 +58,7 @@ export type TCardDropTargetData = {
 };
 
 export function isCardDropTargetData(
-  value: Record<string | symbol, unknown>,
+  value: Record<string | symbol, unknown>
 ): value is TCardDropTargetData {
   return Boolean(value[cardDropTargetKey]);
 }
@@ -72,20 +76,24 @@ export function getCardDropTargetData({
   };
 }
 
-const columnKey = Symbol('column');
+const columnKey = Symbol("column");
 export type TColumnData = {
   [columnKey]: true;
   column: TColumn;
 };
 
-export function getColumnData({ column }: Omit<TColumnData, typeof columnKey>): TColumnData {
+export function getColumnData({
+  column,
+}: Omit<TColumnData, typeof columnKey>): TColumnData {
   return {
     [columnKey]: true,
     column,
   };
 }
 
-export function isColumnData(value: Record<string | symbol, unknown>): value is TColumnData {
+export function isColumnData(
+  value: Record<string | symbol, unknown>
+): value is TColumnData {
   return Boolean(value[columnKey]);
 }
 

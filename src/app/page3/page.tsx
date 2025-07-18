@@ -1,36 +1,61 @@
 "use client";
-import { TBoard, TCard, TColumn } from "./shared/data";
-import { Board } from "./shared/board";
+import { Column } from "./shared/column";
+import List2 from "./list2";
 
-function getInitialData(): TBoard {
-  // Doing this so we get consistent ids on server and client
-  const getCards = (() => {
-    let count: number = 0;
+const initial2 = [
+  {
+    id: "column:a",
+    title: "Column A",
+    cards: [
+      {
+        id: "card:1",
+        content: <List2 />,
+      },
+      {
+        id: "card:2",
+        content: (
+          <div className=" text-red-500">
+            Card 2dfafds asdfasdfas dfasdfas asdfasfehgasecasdcvsadf asdfasd
+            fsdf
+          </div>
+        ),
+      },
+    ],
+  },
+];
 
-    return function getCards({ amount }: { amount: number }): TCard[] {
-      return Array.from({ length: amount }, (): TCard => {
-        const id = count++;
-        return {
-          id: `card:${id}`,
-          description: `Card ${id}`,
-        };
-      });
-    };
-  })();
-
-  const columns: TColumn[] = [
-    { id: "column:a", title: "Column A", cards: getCards({ amount: 100 }) },
-  ];
-
-  return {
-    columns,
-  };
-}
+const initial3 = [
+  {
+    id: "column:b",
+    title: "Column B",
+    cards: [
+      {
+        id: "card:11",
+        content: (
+          <div className=" text-red-500">
+            Card 2dfafds asdfasdfas dfasdfas asdfasfehgasecasdcvsadf asdfasd
+            fsdf
+          </div>
+        ),
+      },
+      {
+        id: "card:22",
+        content: (
+          <div className=" text-red-500">
+            Card 2dfafds asdfasdfas dfasdfas asdfasfehgasecasdcvsadf asdfasd
+            fsdf
+          </div>
+        ),
+      },
+    ],
+  },
+];
 
 export default function Page() {
   return (
     <div className="flex h-full flex-row justify-center">
-      <Board initial={getInitialData().columns[0]} />
+      <Column initial={initial2[0]} />
+      <Column initial={initial3[0]} />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import {
-  draggable,
-  dropTargetForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Copy, Ellipsis, Plus } from "lucide-react";
+import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
@@ -12,8 +12,7 @@ import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-sc
 import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
-import { preserveOffsetOnSource } from "@atlaskit/pragmatic-drag-and-drop/element/preserve-offset-on-source";
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+
 import { Card, CardShadow } from "./card";
 import {
   getColumnData,
@@ -64,11 +63,78 @@ const CardList = memo(function CardList({ column }: { column: TColumn }) {
   ));
 });
 
-export function Column({ column }: { column: TColumn }) {
+export function Column({ initial }: { initial: TColumn }) {
   const scrollableRef = useRef<HTMLDivElement | null>(null);
   const outerFullHeightRef = useRef<HTMLDivElement | null>(null);
   const { settings } = useContext(SettingsContext);
   const [state, setState] = useState<TColumnState>(idle);
+
+  const [column, setColumn] = useState(initial);
+
+  useEffect(() => {
+    return combine(
+      // Monitor for card dragging events - handles when cards are dropped
+      monitorForElements({
+        onDrop({ source, location }) {
+          const dragging = source.data; // Get the card being dragged
+          if (!isCardData(dragging)) {
+            return; // Exit if not dragging a card
+          }
+
+          const innerMost = location.current.dropTargets[0]; // Get the drop target
+
+          if (!innerMost) {
+            return; // Exit if no drop target found
+          }
+          const dropTargetData = innerMost.data; // Get data about where we're dropping
+
+          // Find the index of the dragged card in its home column
+          const cardIndexInHome = column.cards.findIndex(
+            (card) => card.id === dragging.card.id
+          );
+
+          // CASE 1: Dropping on another card (reordering within same column or moving between columns)
+          if (isCardDropTargetData(dropTargetData)) {
+            // Reordering within the same column
+            // Find the target card's position
+            const cardFinishIndex = column.cards.findIndex(
+              (card) => card.id === dropTargetData.card.id
+            );
+
+            // Error checking - make sure we found both cards
+            if (cardIndexInHome === -1 || cardFinishIndex === -1) {
+              return;
+            }
+
+            // No change needed if dropping on itself
+            if (cardIndexInHome === cardFinishIndex) {
+              return;
+            }
+
+            // Get which edge of the target card we're closest to (top/bottom)
+            const closestEdge = extractClosestEdge(dropTargetData);
+
+            // Reorder the cards using edge-aware positioning
+            const reordered = reorderWithEdge({
+              axis: "vertical",
+              list: column.cards,
+              startIndex: cardIndexInHome,
+              indexOfTarget: cardFinishIndex,
+              closestEdgeOfTarget: closestEdge,
+            });
+
+            // Update the column
+            const updated: TColumn = {
+              ...column,
+              cards: reordered,
+            };
+            setColumn(updated);
+            return;
+          }
+        },
+      })
+    );
+  }, [column]);
 
   useEffect(() => {
     const outer = outerFullHeightRef.current;
@@ -114,12 +180,18 @@ export function Column({ column }: { column: TColumn }) {
         getIsSticky: () => true,
         onDragStart({ source, location }) {
           if (isCardData(source.data)) {
-            setIsCardOver({ data: source.data, location });
+            // Only show drop shadows for cards from the same column
+            if (source.data.columnId === column.id) {
+              setIsCardOver({ data: source.data, location });
+            }
           }
         },
         onDragEnter({ source, location }) {
           if (isCardData(source.data)) {
-            setIsCardOver({ data: source.data, location });
+            // Only show drop shadows for cards from the same column
+            if (source.data.columnId === column.id) {
+              setIsCardOver({ data: source.data, location });
+            }
             return;
           }
           if (
@@ -131,7 +203,10 @@ export function Column({ column }: { column: TColumn }) {
         },
         onDropTargetChange({ source, location }) {
           if (isCardData(source.data)) {
-            setIsCardOver({ data: source.data, location });
+            // Only show drop shadows for cards from the same column
+            if (source.data.columnId === column.id) {
+              setIsCardOver({ data: source.data, location });
+            }
             return;
           }
         },

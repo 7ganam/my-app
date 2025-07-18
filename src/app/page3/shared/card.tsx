@@ -109,7 +109,7 @@ export function CardDisplay({
             : undefined
         }
       >
-        <div>{card.description}</div>
+        {card.content}
       </div>
       {/* Put a shadow after the item if closer to the bottom edge */}
       {state.type === "is-over" && state.closestEdge === "bottom" ? (
@@ -130,14 +130,16 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
     invariant(outer && inner);
 
     return combine(
+      // 1. MAKE THE CARD DRAGGABLE - allows this card to be dragged
       draggable({
-        element: inner,
+        element: inner, // The card content element (what you click to drag)
         getInitialData: ({ element }) =>
           getCardData({
             card,
             columnId,
-            rect: element.getBoundingClientRect(),
+            rect: element.getBoundingClientRect(), // Get card's position and size
           }),
+        // 2. CREATE CUSTOM DRAG PREVIEW - shows what you're dragging
         onGenerateDragPreview({ nativeSetDragImage, location, source }) {
           const data = source.data;
           invariant(isCardData(data));
@@ -148,7 +150,7 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
               input: location.current.input,
             }),
             render({ container }) {
-              // Demonstrating using a react portal to generate a preview
+              // Create a custom preview using React portal
               setState({
                 type: "preview",
                 container,
@@ -157,43 +159,58 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
             },
           });
         },
+        // 3. DRAG STATE MANAGEMENT - track when card is being dragged
         onDragStart() {
-          setState({ type: "is-dragging" });
+          setState({ type: "is-dragging" }); // Card becomes semi-transparent
         },
         onDrop() {
-          setState(idle);
+          setState(idle); // Reset to normal state
         },
       }),
+
+      // 4. MAKE THE CARD A DROP TARGET - allows other cards to be dropped on this card
       dropTargetForElements({
-        element: outer,
-        getIsSticky: () => true,
-        canDrop: isDraggingACard,
+        element: outer, // The entire card container (drop zone)
+        getIsSticky: () => true, // Keep drop target active during drag
+        canDrop: isDraggingACard, // Only accept other cards (not columns)
         getData: ({ element, input }) => {
           const data = getCardDropTargetData({ card, columnId });
+          // 5. EDGE DETECTION - determine if dropping above/below this card
           return attachClosestEdge(data, {
             element,
             input,
-            allowedEdges: ["top", "bottom"],
+            allowedEdges: ["top", "bottom"], // Can drop above or below, not left/right
           });
         },
+
+        // 6. VISUAL FEEDBACK WHEN DRAGGING OVER THIS CARD
         onDragEnter({ source, self }) {
           if (!isCardData(source.data)) {
-            return;
+            return; // Exit if not dragging a card
           }
           if (source.data.card.id === card.id) {
-            return;
+            return; // Exit if dragging over itself
           }
+          // Only show drop shadows for cards from the same column
+          if (source.data.columnId !== columnId) {
+            return; // Exit if card is from a different column
+          }
+
+          // Get which edge (top/bottom) is closest to the mouse
           const closestEdge = extractClosestEdge(self.data);
           if (!closestEdge) {
             return;
           }
 
+          // Show visual feedback (shadows, highlights) for the drop zone
           setState({
             type: "is-over",
             dragging: source.data.rect,
-            closestEdge,
+            closestEdge, // "top" or "bottom"
           });
         },
+
+        // 7. UPDATE VISUAL FEEDBACK AS MOUSE MOVES
         onDrag({ source, self }) {
           if (!isCardData(source.data)) {
             return;
@@ -201,11 +218,16 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
           if (source.data.card.id === card.id) {
             return;
           }
+          // Only show drop shadows for cards from the same column
+          if (source.data.columnId !== columnId) {
+            return;
+          }
           const closestEdge = extractClosestEdge(self.data);
           if (!closestEdge) {
             return;
           }
-          // optimization - Don't update react state if we don't need to.
+
+          // Optimization: Only update state if something actually changed
           const proposed: TCardState = {
             type: "is-over",
             dragging: source.data.rect,
@@ -213,23 +235,29 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
           };
           setState((current) => {
             if (isShallowEqual(proposed, current)) {
-              return current;
+              return current; // Don't update if nothing changed
             }
             return proposed;
           });
         },
+
+        // 8. CLEANUP WHEN DRAGGING LEAVES THIS CARD
         onDragLeave({ source }) {
           if (!isCardData(source.data)) {
             return;
           }
           if (source.data.card.id === card.id) {
+            // Special case: Card is dragging itself (should become invisible)
             setState({ type: "is-dragging-and-left-self" });
             return;
           }
+          // Reset to normal state
           setState(idle);
         },
+
+        // 9. CLEANUP WHEN SOMETHING IS DROPPED ON THIS CARD
         onDrop() {
-          setState(idle);
+          setState(idle); // Reset to normal state
         },
       })
     );
