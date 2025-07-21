@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -57,6 +57,7 @@ function SortableItem({ id, children }: SortableItemProps) {
 }
 
 export default function LeftColumn() {
+  const [isClient, setIsClient] = useState(false);
   const [contacts, setContacts] = useState<ContactInfo[]>([
     {
       id: "email",
@@ -90,6 +91,10 @@ export default function LeftColumn() {
     },
   ]);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -112,6 +117,40 @@ export default function LeftColumn() {
         return arrayMove(contacts, oldIndex, newIndex);
       });
     }
+  }
+
+  if (!isClient) {
+    return (
+      <div className="p-4 bg-gradient-to-br from-slate-200 via-blue-100 to-indigo-200 h-full border-r border-gray-300 shadow-lg">
+        <div className="text-center mb-6">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+            <span className="text-white text-2xl font-bold">JD</span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-1">John Doe</h3>
+          <p className="text-sm text-gray-600">Software Engineer</p>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Contact Information
+          </h2>
+          <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></div>
+        </div>
+
+        <ul className="list space-y-3">
+          {contacts.map((contact) => (
+            <li key={contact.id} className="item mb-3">
+              <ContactItem
+                id={contact.id}
+                icon={contact.icon}
+                label={contact.label}
+                value={contact.value}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
 
   return (

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -65,6 +65,70 @@ function NestedSortableList({
         ))}
       </SortableList>
     </div>
+  );
+}
+
+// Client-only wrapper for the editor to prevent SSR issues
+function ClientOnlyEditor({
+  content,
+  editorId,
+  editorStyles,
+  nestedItems,
+  onNestedSortEnd,
+}: {
+  content: string;
+  editorId: string;
+  editorStyles?: EditorStyles;
+  nestedItems?: React.ReactNode[];
+  onNestedSortEnd?: (oldIndex: number, newIndex: number) => void;
+}) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return (
+      <div
+        className="editor-wrapper h-full flex flex-col"
+        style={{
+          fontSize: editorStyles?.fontSize || "14px",
+          fontFamily: editorStyles?.fontFamily || "Inter, sans-serif",
+          color: editorStyles?.color || "#000",
+          backgroundColor: editorStyles?.backgroundColor || "white",
+          padding: editorStyles?.padding || "8px",
+          borderRadius: editorStyles?.borderRadius || "4px",
+          border: editorStyles?.border || "1px solid #ccc",
+          lineHeight: editorStyles?.lineHeight || "1.5",
+          fontWeight: editorStyles?.fontWeight || "normal",
+          textAlign: editorStyles?.textAlign || "left",
+        }}
+      >
+        <div
+          className="flex-1 min-h-0"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+        {nestedItems && onNestedSortEnd && (
+          <div className="mt-4 flex-shrink-0">
+            <NestedSortableList
+              items={nestedItems}
+              onSortEnd={onNestedSortEnd}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <EditorComponent
+      content={content}
+      editorId={editorId}
+      editorStyles={editorStyles}
+      nestedItems={nestedItems}
+      onNestedSortEnd={onNestedSortEnd}
+    />
   );
 }
 
@@ -249,7 +313,7 @@ export default function RightColumn() {
               </div>
               <div className="mb-6">
                 <div className="mb-2">
-                  <EditorComponent
+                  <ClientOnlyEditor
                     content={item.content}
                     editorId={`editor${item.id}`}
                     editorStyles={{
