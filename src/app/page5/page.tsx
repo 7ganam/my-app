@@ -4,7 +4,7 @@ import "./style.css";
 import { Swapy } from "swapy";
 import { createSwapy } from "swapy";
 
-function List1() {
+function App() {
   const swapyRef = useRef<Swapy | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -15,7 +15,7 @@ function List1() {
         // swapMode: 'drop',
         // autoScrollOnDrag: true,
         // enabled: true,
-        // dragAxis: 'x',
+        // dragAxis: 'y', // Changed to y for vertical dragging
         // dragOnHold: true
       });
 
@@ -46,27 +46,38 @@ function List1() {
   }, []);
   return (
     <div className="container" ref={containerRef}>
-      <div className="slot top" data-swapy-slot="list1-a">
-        <div className="item item-a" data-swapy-item="list1-a">
-          <div>A</div>
+      <div className="slot" data-swapy-slot="item-1">
+        <div className="item item-1" data-swapy-item="item-1">
+          <div className="handle" data-swapy-handle></div>
+          <div>Item 1</div>
         </div>
       </div>
-      <div className="middle">
-        <div className="slot middle-left" data-swapy-slot="list1-b">
-          <div className="item item-b" data-swapy-item="list1-b">
-            <div className="handle" data-swapy-handle></div>
-            <div>B</div>
-          </div>
+      <div className="slot" data-swapy-slot="item-2">
+        <div className="item item-2" data-swapy-item="item-2">
+          <div className="handle" data-swapy-handle></div>
+          <div>Item 2</div>
         </div>
-        <div className="slot middle-right" data-swapy-slot="list1-c"></div>
       </div>
-      <div className="slot bottom" data-swapy-slot="list1-d">
-        <div className="item item-d" data-swapy-item="list1-d">
-          <div>D</div>
+      <div className="slot" data-swapy-slot="item-3">
+        <div className="item item-3" data-swapy-item="item-3">
+          <div className="handle" data-swapy-handle></div>
+          <div>Item 3</div>
+        </div>
+      </div>
+      <div className="slot" data-swapy-slot="item-4">
+        <div className="item item-4" data-swapy-item="item-4">
+          <div className="handle" data-swapy-handle></div>
+          <div>Item 4</div>
+        </div>
+      </div>
+      <div className="slot" data-swapy-slot="item-5">
+        <div className="item item-5" data-swapy-item="item-5">
+          <div className="handle" data-swapy-handle></div>
+          <div>Item 5</div>
         </div>
       </div>
     </div>
   );
 }
 
-export default List1;
+export default App;

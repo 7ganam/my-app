@@ -1,83 +1,34 @@
 "use client";
-import { useEffect, useRef } from "react";
-import "./style.css";
-import { Swapy } from "swapy";
-import { createSwapy } from "swapy";
+import React from "react";
+import styled from "@emotion/styled";
+import QuoteApp from "./src/vertical/quote-app";
+import { getQuotes } from "./src/data";
+import { grid } from "./src/constants";
 
-function App() {
-  const swapyRef = useRef<Swapy | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+const ScrollContainer = styled.div`
+  box-sizing: border-box;
+  background: lightgrey;
+  padding: ${grid * 2}px;
+  overflow-y: scroll;
+  width: 500px;
+  height: 100vh;
+  position: relative;
+`;
 
-  useEffect(() => {
-    if (containerRef.current) {
-      swapyRef.current = createSwapy(containerRef.current, {
-        // animation: 'dynamic'
-        // swapMode: 'drop',
-        // autoScrollOnDrag: true,
-        // enabled: true,
-        // dragAxis: 'y', // Changed to y for vertical dragging
-        // dragOnHold: true
-      });
+const Title = styled.h4`
+  text-align: center;
+  margin-bottom: ${grid}px;
+`;
 
-      // swapyRef.current.enable(false)
-      // swapyRef.current.destroy()
-      // console.log(swapyRef.current.slotItemMap())
-
-      swapyRef.current.onBeforeSwap((event) => {
-        console.log("beforeSwap", event);
-        // This is for dynamically enabling and disabling swapping.
-        // Return true to allow swapping, and return false to prevent swapping.
-        return true;
-      });
-
-      swapyRef.current.onSwapStart((event) => {
-        console.log("start", event);
-      });
-      swapyRef.current.onSwap((event) => {
-        console.log("swap", event);
-      });
-      swapyRef.current.onSwapEnd((event) => {
-        console.log("end", event);
-      });
-    }
-    return () => {
-      swapyRef.current?.destroy();
-    };
-  }, []);
+export default function Page4() {
   return (
-    <div className="container" ref={containerRef}>
-      <div className="slot" data-swapy-slot="item-1">
-        <div className="item item-1" data-swapy-item="item-1">
-          <div className="handle" data-swapy-handle></div>
-          <div>Item 1</div>
-        </div>
-      </div>
-      <div className="slot" data-swapy-slot="item-2">
-        <div className="item item-2" data-swapy-item="item-2">
-          <div className="handle" data-swapy-handle></div>
-          <div>Item 2</div>
-        </div>
-      </div>
-      <div className="slot" data-swapy-slot="item-3">
-        <div className="item item-3" data-swapy-item="item-3">
-          <div className="handle" data-swapy-handle></div>
-          <div>Item 3</div>
-        </div>
-      </div>
-      <div className="slot" data-swapy-slot="item-4">
-        <div className="item item-4" data-swapy-item="item-4">
-          <div className="handle" data-swapy-handle></div>
-          <div>Item 4</div>
-        </div>
-      </div>
-      <div className="slot" data-swapy-slot="item-5">
-        <div className="item item-5" data-swapy-item="item-5">
-          <div className="handle" data-swapy-handle></div>
-          <div>Item 5</div>
-        </div>
+    <div style={{ padding: "20px" }}>
+      <h1>Drag and Drop Examples</h1>
+
+      <div style={{ marginBottom: "40px" }}>
+        <h2>Basic Example</h2>
+        <QuoteApp initial={getQuotes()} />
       </div>
     </div>
   );
 }
-
-export default App;
